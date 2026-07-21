@@ -1,0 +1,39 @@
+---
+import { siteConfig } from '../config/site';
+
+const { showCta = true } = Astro.props;
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="shared-footer">
+	<div class:list={['shared-footer-inner', !showCta && 'shared-footer-inner-no-cta']}>
+		{
+			showCta && (
+				<div class="shared-footer-cta">
+					<h2>Towards evidence-based public discourse.</h2>
+					<p>
+						Reach out to us at <a class="shared-footer-inline-link" href="mailto:contact@lokanetra.dev">contact(at)lokanetra.dev</a> for more information.
+					</p>
+				</div>
+			)
+		}
+
+		<div class="shared-footer-meta">
+			<div class="shared-footer-links">
+				{
+					siteConfig.socialLinks.map((link) => (
+						<a href={link.href} target="_blank" rel="noopener noreferrer">
+							{link.label}
+						</a>
+					))
+				}
+			</div>
+			<div class="shared-footer-note">
+				<div class="shared-footer-legal">
+					{siteConfig.legalLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+				</div>
+				<p>&copy; {currentYear} {siteConfig.name}. All rights reserved.</p>
+			</div>
+		</div>
+	</div>
+</footer>
