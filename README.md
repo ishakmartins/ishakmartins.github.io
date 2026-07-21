@@ -1,5 +1,4 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-84cc16?style=for-the-badge)](./LICENSE)
-**Credits:** [maria-lake.vercel.app](https://maria-lake.vercel.app/)
+[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](./LICENSE)
 
 ## Getting Started
 
@@ -20,13 +19,9 @@ Preview the production build locally:
 npm run preview
 ```
 
-## Template Setup
+## Site Configuration
 
-The main template settings live in:
-
-- [src/config/site.ts](./src/config/site.ts)
-
-Update this file before publishing:
+Main site settings are in [src/config/site.ts](./src/config/site.ts). Configure:
 
 - `name`
 - `title`
@@ -36,95 +31,87 @@ Update this file before publishing:
 - `authorRole`
 - social links
 
-Set your production domain with an environment variable before publishing:
+Set your production domain with an environment variable:
 
 - `SITE_URL=https://your-domain.com`
 - or `PUBLIC_SITE_URL=https://your-domain.com`
 
-This keeps canonical URLs, `robots.txt`, and the sitemap aligned without editing source for each environment.
+This keeps canonical URLs, `robots.txt`, and the sitemap consistent across environments.
 
 ## SEO
 
-The template includes:
+The site includes built-in SEO features:
 
 - canonical URLs
 - meta descriptions
-- keyword meta
-- Open Graph tags
-- Twitter card tags
+- Open Graph and Twitter card tags
 - sitemap generation
 - dynamic `robots.txt`
-- JSON-LD structured data defaults
-- `noindex` handling for the 404 page
+- JSON-LD structured data
+- `noindex` handling for error pages
 
-Main SEO files:
+Key SEO files:
 
 - [src/layouts/Layout.astro](./src/layouts/Layout.astro)
 - [astro.config.mjs](./astro.config.mjs)
 - [src/pages/robots.txt.ts](./src/pages/robots.txt.ts)
 - [public/og-image.svg](./public/og-image.svg)
 
-## Cookies and Consent
+## Cookie Consent & Preferences
 
-The theme includes a client-side cookie consent system with:
+The site includes a client-side cookie consent system with:
 
-- a bottom banner for first visit consent
-- a preferences modal with essential, analytics, and marketing categories
-- saved consent in `localStorage` under `maria-cookie-consent`
-- a footer `Cookie Preferences` button for reopening the modal
-- a `Cookies` policy page at `/cookies`
+- first-visit consent banner
+- preferences modal (essential, analytics, marketing)
+- persistent consent settings
+- footer preferences button
+- dedicated `/cookies` policy page
 
-The theme also saves the visitor's color theme in `localStorage` under `maria-theme`.
+Theme preference is saved separately in localStorage.
 
-### How consent works
+### Consent API
 
-- Essential storage is always active because it remembers theme and consent choices.
-- Analytics and marketing are optional categories and default to off until the visitor opts in.
-- The consent UI works out of the box even if you have not connected analytics or marketing tools yet.
-
-### Client API
-
-The consent script exposes `window.mariaCookieConsent` in the browser:
+Access consent status via `window.cookieConsent`:
 
 ```js
-window.mariaCookieConsent.getConsent();
-window.mariaCookieConsent.hasConsent();
-window.mariaCookieConsent.canUse('analytics');
-window.mariaCookieConsent.canUse('marketing');
-window.mariaCookieConsent.openPreferences();
+window.cookieConsent.getConsent();
+window.cookieConsent.hasConsent();
+window.cookieConsent.canUse('analytics');
+window.cookieConsent.canUse('marketing');
+window.cookieConsent.openPreferences();
 ```
 
-Whenever a visitor updates their preferences, the site dispatches:
+Listen for consent changes:
 
 ```js
-window.addEventListener('maria:cookieConsentChanged', (event) => {
+window.addEventListener('cookieConsentChanged', (event) => {
   console.log(event.detail);
 });
 ```
 
-### Hooking in analytics or marketing scripts
+### Integrating Analytics
 
-Only load optional third-party scripts after checking consent. Example:
+Only load third-party scripts after checking consent:
 
 ```html
 <script>
-  if (window.mariaCookieConsent?.canUse('analytics')) {
-    // load your analytics script here
+  if (window.cookieConsent?.canUse('analytics')) {
+    // load analytics here
   }
 
-  window.addEventListener('maria:cookieConsentChanged', (event) => {
+  window.addEventListener('cookieConsentChanged', (event) => {
     if (event.detail.analytics) {
-      // load or re-enable analytics here
+      // enable or reload analytics
     }
   });
 </script>
 ```
 
-If you add a new provider, also update:
+When adding new consent categories, update:
 
 - [src/pages/cookies.astro](./src/pages/cookies.astro)
 - [src/pages/privacy.astro](./src/pages/privacy.astro)
-- banner/modal copy in [public/cookie-consent.js](./public/cookie-consent.js)
+- [public/cookie-consent.js](./public/cookie-consent.js)
 
 ## Content and Pages
 
@@ -176,7 +163,9 @@ If you only deploy to one platform, delete the other config file before wiring u
 
 ## License
 
-This project is licensed under the [MIT License](./LICENSE).
+This project is licensed under the [GNU General Public License v3.0](./LICENSE).
+
+**Credits:** Built with design inspiration from [maria-lake.vercel.app](https://maria-lake.vercel.app/)
 
 ## Fonts
 
